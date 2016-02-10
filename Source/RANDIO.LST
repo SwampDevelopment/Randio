@@ -30,12 +30,12 @@
     27                          	;***********************************************************************************
     28                          	;
     29                          	;           timing based on 4MHZ crystal  assembler = parallax pasm
-    30                          	;			for RC OSC, uncomment correct DEVICE line, and change
-    31                          	;			IIME10MS equ constant to match type
+    30                          	;                       for RC OSC, uncomment correct DEVICE line, and change
+    31                          	;                       IIME10MS equ constant to match type
     32                          	;
     33                          	;
-    34                          	;			DEVICE  pic16c54,XT_OSC,WDT_OFF,PROTECT_ON
-    35     000-                 				DEVICE  pic16c54,RC_OSC,WDT_OFF,PROTECT_ON
+    34     000-                 	            DEVICE  pic16c54,XT_OSC,WDT_OFF,PROTECT_ON
+    35                          	;			DEVICE  pic16c54,RC_OSC,WDT_OFF,PROTECT_ON
     36     000-                 				ID      CHECKSUM
     37     1FF- A60             				RESET   start
     38
@@ -65,9 +65,9 @@
     62     018-                 	switch          ds      1       ;1A     ;used to hold the mode setup value
     63     019-                 	debcounter      ds      3       ;1B     ;used to debounce inputs
     64     01C-                 	minutes_a       ds      1       ;1C     ;used for watch dog timmer
-    65     01D-                 	seed			ds		1		;1D 	;used to hold the seed for the number generater
-    66     01E-                 	r_count			ds		1		;1E 	;Used to count interval between white noise pulses
-    67     01F-                 	s_count			ds		1		;1F		;counts reps to add to seed (8)(one byte)
+    65     01D-                 	seed                    ds              1               ;1D     ;used to hold the seed for the number generater
+    66     01E-                 	r_count                 ds              1               ;1E     ;Used to count interval between white noise pulses
+    67     01F-                 	s_count                 ds              1               ;1F             ;counts reps to add to seed (8)(one byte)
     68
     69                          	;               LABELS 
     70
@@ -92,7 +92,7 @@
     89                          	;Interupt Service Routine
     90                          	;---------------------------------------------------------------------------------------------
     91     000-                 	time 
-    92     000- 2BE             			inc		r_count				;just keep counting till a white noise pulse then analyse
+    92     000- 2BE             			inc             r_count                         ;just keep counting till a white noise pulse then analyse
     93
     94                          	;......................................
     95                          	;whitein Input
@@ -101,40 +101,40 @@
     98     001-                 	:t205
     99     001- 693 A0A         			jb      white_flag,:t275       ;if pulse detected skip down to section b
    100     003- 6B3 A05         			jb      white_active,:t210     ;input detected, "debouncing"
-   101                          	;		jb      whitein,:t300
-   102                          	;		setb    white_active
-   103                          	;		clr     debcounter+1
+   101                          	;               jb      whitein,:t300
+   102                          	;               setb    white_active
+   103                          	;               clr     debcounter+1
    104     005-                 	:t210
-   105     005- 745 A08         			jnb      whitein,:t250			;any noise comming in, else just keep counting (r_count)
+   105     005- 745 A08         			jnb      whitein,:t250                  ;any noise comming in, else just keep counting (r_count)
    106                          	;**********************************************  S E T  * DEBOUNCE * H E R E 
-   107                          	;		cjne    debcounter+1,#1,:t300   ;set debounce time here 10ms per count
+   107                          	;               cjne    debcounter+1,#1,:t300   ;set debounce time here 10ms per count
    108                          			
    109                          			
-   110                          	;		setb    white_flag             ;input detected and debounced!
+   110                          	;               setb    white_flag             ;input detected and debounced!
    111
    112     007- A19             			jmp     :t300
    113     008-                 	:t250
-   114                          	;		clr     debcounter+1
+   114                          	;               clr     debcounter+1
    115     008- 4B3             			clrb    white_active
-   116     009- A19             			jmp		:t300
+   116     009- A19             			jmp             :t300
    117     00A-                 	:t275
-   118     00A- 645 A19         			jb		whitein,:t300			;ok we got a noise pulse in (now for some action)
-   119     00C- C7D 09E 703 A15 			cjb		r_count,#125,:t280		;if less than 125 load a 0 in the next seed bit else a 1
+   118     00A- 645 A19         			jb              whitein,:t300                   ;ok we got a noise pulse in (now for some action)
+   119     00C- C7D 09E 703 A15 			cjb             r_count,#125,:t280              ;if less than 125 load a 0 in the next seed bit else a 1
    120     010- 503             			stc
-   121     011- 37D             			rl		seed
-   122     012- 2BF             			inc		s_count
-   123     013- 4B3             			clrb	white_active
-   124     014- A19             			jmp		:t300
+   121     011- 37D             			rl              seed
+   122     012- 2BF             			inc             s_count
+   123     013- 4B3             			clrb    white_active
+   124     014- A19             			jmp             :t300
    125                          			
    126     015-                 	:t280
    127     015- 403             			clc
-   128     016- 37D             			rl		seed
-   129     017- 2BF             			inc		s_count
-   130     018- 4B3             			clrb	white_active
+   128     016- 37D             			rl              seed
+   129     017- 2BF             			inc             s_count
+   130     018- 4B3             			clrb    white_active
    131                          			
    132     019-                 	:t300
-   133     019- C08 09F 643     			csne	s_count,#8
-   134     01C- 593             			setb	white_flag				;ok got the seed, now signal the process
+   133     019- C08 09F 643     			csne    s_count,#8
+   134     01C- 593             			setb    white_flag                              ;ok got the seed, now signal the process
    135                          	;----------------------------------------------
    136     01D-                 	:t600
    137     01D- 201 02C         			mov     temp1,RTCC
@@ -153,8 +153,8 @@
    150     02A- 2BA             			inc     debcounter+1
    151     02B- 2BB             			inc     debcounter+2
    152     02C- 433             			clrb    sync10                  ;signal 10MS time routines
-   153     02D- 793 A30         			jnb		white_flag,:t700
-   154     02F- 0FD             			dec		seed
+   153     02D- 793 A30         			jnb             white_flag,:t700
+   154     02F- 0FD             			dec             seed
    155     030-                 	:t700
    156     030- C05 088 743 A47 			cjne    mseconds_10,#5,:time_exit
    157                          	;........................................if 50ms has passed do the whiteing
@@ -167,7 +167,7 @@
    164                          	;........................................if 1 second has pased do the whiteing
    165     03D- 069             			clr     mseconds_50
    166     03E- 2AA             			inc    seconds
-   167     03F- C02 1A5         			xor     RA,#00000010b           ;Flash the life light!
+   167     03F- C08 1A5         			xor     RA,#00001000b           ;Flash the life light!
    168     041- C3C 08A 743 A47 			cjne    seconds,#60,:time_exit
    169                          	;........................................if 1 minute has passed do the whiteing
    170     045- 06A             			clr    seconds
@@ -202,17 +202,17 @@
    199                          	;**********************************************************************************************
    200     056-                 	main
    201     056- 900             			call    time
-   202     057- 793 A56         			jnb		white_flag,main
-   203                          	                       
+   202     057- 793 A56         			jnb             white_flag,main
+   203                          			       
    204     059-                 	process
-   205     059- 900             			call	time
-   206     05A- 23D             			test	seed
-   207     05B- 743 A59         			jnz		process
-   208     05D- 506             			setb	control				;Thats it Folks!
+   205     059- 900             			call    time
+   206     05A- 23D             			test    seed
+   207     05B- 743 A59         			jnz             process
+   208     05D- 506             			setb    control                         ;Thats it Folks!
    209                          			
-   210     05E-                 	:end_loop	
-   211     05E- 900             			call	time
-   212     05F- A5E             			jmp		:end_loop
+   210     05E-                 	:end_loop       
+   211     05E- 900             			call    time
+   212     05F- A5E             			jmp             :end_loop
    213                          				
    214
    215
@@ -230,8 +230,8 @@
    227     068- CFF 026         			mov     RB,#11111111b
    228     06A- 94B             			call    clear
    229     06B-                 	:s10
-   230                          	;		djnz    timer,:s10              ;startup delay
-   231                          	;		djnz    timer+1,:s10
+   230                          	;               djnz    timer,:s10              ;startup delay
+   231                          	;               djnz    timer+1,:s10
    232     06B- C27 02E         			mov     time10,#time10ms 
    233     06D- 061             			clr     RTCC
    234                          			

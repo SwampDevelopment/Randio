@@ -27,12 +27,12 @@
 ;***********************************************************************************
 ;
 ;           timing based on 4MHZ crystal  assembler = parallax pasm
-;			for RC OSC, uncomment correct DEVICE line, and change
-;			IIME10MS equ constant to match type
+;                       for RC OSC, uncomment correct DEVICE line, and change
+;                       IIME10MS equ constant to match type
 ;
 ;
-;			DEVICE  pic16c54,XT_OSC,WDT_OFF,PROTECT_ON
-			DEVICE  pic16c54,RC_OSC,WDT_OFF,PROTECT_ON
+            DEVICE  pic16c54,XT_OSC,WDT_OFF,PROTECT_ON
+;			DEVICE  pic16c54,RC_OSC,WDT_OFF,PROTECT_ON
 			ID      CHECKSUM
 			RESET   start
 
@@ -62,9 +62,9 @@ counter_50ms_b  ds      1       ;17     ;used to time 50ms per count, clr before
 switch          ds      1       ;1A     ;used to hold the mode setup value
 debcounter      ds      3       ;1B     ;used to debounce inputs
 minutes_a       ds      1       ;1C     ;used for watch dog timmer
-seed			ds		1		;1D 	;used to hold the seed for the number generater
-r_count			ds		1		;1E 	;Used to count interval between white noise pulses
-s_count			ds		1		;1F		;counts reps to add to seed (8)(one byte)
+seed                    ds              1               ;1D     ;used to hold the seed for the number generater
+r_count                 ds              1               ;1E     ;Used to count interval between white noise pulses
+s_count                 ds              1               ;1F             ;counts reps to add to seed (8)(one byte)
 
 ;               LABELS 
 
@@ -89,7 +89,7 @@ white_active    equ     flag.5          ;used to triger whitein debounce
 ;Interupt Service Routine
 ;---------------------------------------------------------------------------------------------
 time 
-		inc		r_count				;just keep counting till a white noise pulse then analyse
+		inc             r_count                         ;just keep counting till a white noise pulse then analyse
 
 ;......................................
 ;whitein Input
@@ -98,40 +98,40 @@ time
 :t205
 		jb      white_flag,:t275       ;if pulse detected skip down to section b
 		jb      white_active,:t210     ;input detected, "debouncing"
-;		jb      whitein,:t300
-;		setb    white_active
-;		clr     debcounter+1
+;               jb      whitein,:t300
+;               setb    white_active
+;               clr     debcounter+1
 :t210
-		jnb      whitein,:t250			;any noise comming in, else just keep counting (r_count)
+		jnb      whitein,:t250                  ;any noise comming in, else just keep counting (r_count)
 ;**********************************************  S E T  * DEBOUNCE * H E R E 
-;		cjne    debcounter+1,#1,:t300   ;set debounce time here 10ms per count
+;               cjne    debcounter+1,#1,:t300   ;set debounce time here 10ms per count
 		
 		
-;		setb    white_flag             ;input detected and debounced!
+;               setb    white_flag             ;input detected and debounced!
 
 		jmp     :t300
 :t250
-;		clr     debcounter+1
+;               clr     debcounter+1
 		clrb    white_active
-		jmp		:t300
+		jmp             :t300
 :t275
-		jb		whitein,:t300			;ok we got a noise pulse in (now for some action)
-		cjb		r_count,#125,:t280		;if less than 125 load a 0 in the next seed bit else a 1
+		jb              whitein,:t300                   ;ok we got a noise pulse in (now for some action)
+		cjb             r_count,#125,:t280              ;if less than 125 load a 0 in the next seed bit else a 1
 		stc
-		rl		seed
-		inc		s_count
-		clrb	white_active
-		jmp		:t300
+		rl              seed
+		inc             s_count
+		clrb    white_active
+		jmp             :t300
 		
 :t280
 		clc
-		rl		seed
-		inc		s_count
-		clrb	white_active
+		rl              seed
+		inc             s_count
+		clrb    white_active
 		
 :t300
-		csne	s_count,#8
-		setb	white_flag				;ok got the seed, now signal the process
+		csne    s_count,#8
+		setb    white_flag                              ;ok got the seed, now signal the process
 ;----------------------------------------------
 :t600
 		mov     temp1,RTCC
@@ -150,8 +150,8 @@ time
 		inc     debcounter+1
 		inc     debcounter+2
 		clrb    sync10                  ;signal 10MS time routines
-		jnb		white_flag,:t700
-		dec		seed
+		jnb             white_flag,:t700
+		dec             seed
 :t700
 		cjne    mseconds_10,#5,:time_exit
 ;........................................if 50ms has passed do the whiteing
@@ -164,7 +164,7 @@ time
 ;........................................if 1 second has pased do the whiteing
 		clr     mseconds_50
 		inc    seconds
-		xor     RA,#00000010b           ;Flash the life light!
+		xor     RA,#00001000b           ;Flash the life light!
 		cjne    seconds,#60,:time_exit
 ;........................................if 1 minute has passed do the whiteing
 		clr    seconds
@@ -199,17 +199,17 @@ clear
 ;**********************************************************************************************
 main
 		call    time
-		jnb		white_flag,main
-                       
+		jnb             white_flag,main
+		       
 process
-		call	time
-		test	seed
-		jnz		process
-		setb	control				;Thats it Folks!
+		call    time
+		test    seed
+		jnz             process
+		setb    control                         ;Thats it Folks!
 		
-:end_loop	
-		call	time
-		jmp		:end_loop
+:end_loop       
+		call    time
+		jmp             :end_loop
 			
 
 
@@ -227,8 +227,8 @@ start
 		mov     RB,#11111111b
 		call    clear
 :s10
-;		djnz    timer,:s10              ;startup delay
-;		djnz    timer+1,:s10
+;               djnz    timer,:s10              ;startup delay
+;               djnz    timer+1,:s10
 		mov     time10,#time10ms 
 		clr     RTCC
 		
