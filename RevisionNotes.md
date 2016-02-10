@@ -1,13 +1,8 @@
-Here is the PCB layout 
-Also an updated Schematic
-Please check them over and get back to me
-I am always paranoid now that the express pcb software
-is gonna leave something unattached.
+OK
+Here are the new files for Randio version 2.
+There is a slight change in the schematic in that I added a diode to the reset circuit  to
+insure that it will reset quickly on power glitches.
+quite a bit of re routes on the pcb, check it out and let me know if you see anything
+that needs further attention.
 
-However I think it is OK. there are a few parts that may not be necessary
-and if so we can leave them off the boards (IE the resonator, could use rc)
-but I put them in so we could potentially use this board for something else
-in the future, also put a small BB area in, for future mods, let me know if anything
-needs changed, I should be available some today.
-
-I am beginning on the program, but still have to find a suitable compiler.
+BT.....
