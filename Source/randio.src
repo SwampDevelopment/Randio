@@ -37,8 +37,8 @@
 			RESET   start
 
 ;                       DEFINE CONSTANTS
-TIME10MS        equ     39              ;adjust timing here if RC clock
-					;4mhz = 39, 1mhz = 10, rc = 
+TIME10MS        equ     78              ;adjust timing here
+					;8mhz=78 4mhz = 39, 1mhz = 10, rc = 
 					;X 10 ms  ,, 5 = PIO CLOCK
 
 
@@ -225,6 +225,7 @@ start
 		mov     !RB,#00000000b
 		mov     RA,#11111111b
 		mov     RB,#11111111b
+		clrb	control							;make sure output is low initialy
 		call    clear
 :s10
 ;               djnz    timer,:s10              ;startup delay
