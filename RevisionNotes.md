@@ -1,1 +1,3 @@
-No really , I mean it! (I think) This is the final on the Randio board. Motorola Processor
+OK here are the PIC Microcontroller Versions of the board.
+
+BT...
